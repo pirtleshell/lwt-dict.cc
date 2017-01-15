@@ -9,34 +9,34 @@ var runWhenjQuery = function(func) {
 
 // from lwt/glosbe_api.php
 var addTranslation = function(s) {
-	var w = window.parent.frames['ro'];
-	if (typeof w == 'undefined') w = window.opener;
-	if (typeof w == 'undefined') {
-		alert ('Translation can not be copied!');
-		return;
-	}
-	var c = w.document.forms[0].WoTranslation;
-	if (typeof c != 'object') {
-		alert ('Translation can not be copied!');
-		return;
-	}
-	var oldValue = c.value;
-	if (oldValue.trim() == '') {
-		c.value = s;
-		w.makeDirty();
-	}
-	else {
-		if (oldValue.indexOf(s) == -1) {
-			c.value = oldValue + ' / ' + s;
-			w.makeDirty();
-		}
-		else {
-			if (confirm('"' + s + '" seems already to exist as a translation.\nInsert anyway?')) {
-				c.value = oldValue + ' / ' + s;
-				w.makeDirty();
-			}
-		}
-	}
+  var w = window.parent.frames['ro'];
+  if (typeof w == 'undefined') w = window.opener;
+  if (typeof w == 'undefined') {
+    alert ('Translation can not be copied!');
+    return;
+  }
+  var c = w.document.forms[0].WoTranslation;
+  if (typeof c != 'object') {
+    alert ('Translation can not be copied!');
+    return;
+  }
+  var oldValue = c.value;
+  if (oldValue.trim() == '') {
+    c.value = s;
+    w.makeDirty();
+  }
+  else {
+    if (oldValue.indexOf(s) == -1) {
+      c.value = oldValue + ' / ' + s;
+      w.makeDirty();
+    }
+    else {
+      if (confirm('"' + s + '" seems already to exist as a translation.\nInsert anyway?')) {
+        c.value = oldValue + ' / ' + s;
+        w.makeDirty();
+      }
+    }
+  }
 }
 
 var editRow = function(element) {

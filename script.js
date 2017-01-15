@@ -43,7 +43,13 @@ var editRow = function(element) {
   // add choose checkbox icon
   var transEls = element.find('td:nth-child(2)');
   transEls.children().removeAttr('href');
-  var translation = transEls.text();
+
+  // don't use text from DFN if present (the dict.cc category)
+  // remove leading space
+  var translation = transEls.contents().filter(function(){
+    return this.tagName !== 'DFN';
+  }).text().replace(/^\ /, '');
+
   var chooseBox = document.createElement('img');
   chooseBox.className = 'click';
   chooseBox.src = 'tick-button.png';

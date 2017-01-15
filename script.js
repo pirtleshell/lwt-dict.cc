@@ -1,4 +1,7 @@
 
+// turn on/off using the dict.cc subject as a tag for the word.
+var USE_SUBJECT_AS_TAG = true;
+
 var translationData = [];
 
 var runWhenjQuery = function(func) {
@@ -40,6 +43,13 @@ var addTranslation = function(rowNum) {
       }
     }
   }
+
+  if (USE_SUBJECT_AS_TAG) {
+    var tags = translationData[rowNum].tags;
+    for (var i = 0; i < tags.length; i++) {
+      addSubjectAsTag(tags[i]);
+    }
+  }
 }
 
 var editRow = function(rowNum) {
@@ -54,14 +64,20 @@ var editRow = function(rowNum) {
     return this.tagName !== 'DFN';
   }).text().replace(/^\ /, '');
 
+  translationData[rowNum] = {translation};
+
+  if (USE_SUBJECT_AS_TAG) {
+    translationData[rowNum].tags = transEls.find('dfn').map(function() {
+      return this.innerHTML;
+    });
+  }
+
   var chooseBox = document.createElement('img');
   chooseBox.className = 'click';
   chooseBox.src = 'tick-button.png';
   chooseBox.title = 'Copy';
   chooseBox.alt = 'Copy';
   element.find('td')[1].prepend(chooseBox);
-
-  translationData[rowNum] = {translation};
 
   // wrap with select translation span
   element.find('td:nth-child(2)').contents().wrapAll(`<span class='click' onclick="addTranslation(${rowNum})" />`);
@@ -93,5 +109,33 @@ var parseTable = function() {
     editRow(i);
   }
 };
+
+var subjects;
+var fetchSubjects = function() {
+  var req = new XMLHttpRequest();
+  req.open('GET', 'subjects.json');
+  req.onload = function(e) {
+    subjects = JSON.parse(this.responseText);
+  };
+  req.send();
+}
+if (USE_SUBJECT_AS_TAG)
+  fetchSubjects();
+
+// insert the appropriate subject in tag field given subject abbreviation
+var addSubjectAsTag = function(abbr) {
+  var subject = subjects[abbr];
+  var w = window.parent.frames['ro'];
+  if (typeof w == 'undefined') w = window.opener;
+  if (typeof w == 'undefined')
+    return;
+  var c = w.$('#termtags');
+
+  // add tag if it doesn't already exist
+  if (c.tagit('assignedTags').indexOf(subject) < 0) {
+    c.tagit('createTag', subject);
+    w.makeDirty();
+  }
+}
 
 window.onload = runWhenjQuery(parseTable);

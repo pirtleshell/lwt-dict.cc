@@ -27,6 +27,8 @@ Ta-daa! Now, much like the standard dictionary that uses Glosbe, you have an eas
 
 ![dict.cc plugin screenshot](https://github.com/PirtleShell/lwt-dict.cc/blob/master/spannend-screenshot.png)
 
+Click the :white_check_mark: and it transfers the selected definition! It also puts the dict.cc subject as a tag for the word. Turn tagging off, by setting `USE_SUBJECT_AS_TAG` to false in `script.js`.
+
 ## A note about not breaking any rules
 
 I build this with the full intention of following [dict.cc's Terms of Service](https://www.dict.cc/?s=about%3Afaq#faq16). It states:

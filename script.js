@@ -1,4 +1,6 @@
 
+var translationData = [];
+
 var runWhenjQuery = function(func) {
   if (window.jQuery) {
     func();
@@ -8,7 +10,8 @@ var runWhenjQuery = function(func) {
 };
 
 // from lwt/glosbe_api.php
-var addTranslation = function(s) {
+var addTranslation = function(rowNum) {
+  var s = translationData[rowNum].translation;
   var w = window.parent.frames['ro'];
   if (typeof w == 'undefined') w = window.opener;
   if (typeof w == 'undefined') {
@@ -39,7 +42,8 @@ var addTranslation = function(s) {
   }
 }
 
-var editRow = function(element) {
+var editRow = function(rowNum) {
+  var element = $(`#tr${rowNum}`);
   // add choose checkbox icon
   var transEls = element.find('td:nth-child(2)');
   transEls.children().removeAttr('href');
@@ -57,8 +61,10 @@ var editRow = function(element) {
   chooseBox.alt = 'Copy';
   element.find('td')[1].prepend(chooseBox);
 
+  translationData[rowNum] = {translation};
+
   // wrap with select translation span
-  element.find('td:nth-child(2)').contents().wrapAll(`<span class='click' onclick="addTranslation('${translation}')" />`);
+  element.find('td:nth-child(2)').contents().wrapAll(`<span class='click' onclick="addTranslation(${rowNum})" />`);
 
   // change german links to within frame
   element.find('td:nth-child(3)').children().map(function(i, el) {
@@ -84,7 +90,7 @@ var parseTable = function() {
 
   // edit links and add boxes
   for (var i = start; i <= end; i++) {
-    editRow($(`#tr${i}`));
+    editRow(i);
   }
 };
 

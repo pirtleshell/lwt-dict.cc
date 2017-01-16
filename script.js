@@ -108,6 +108,21 @@ var parseTable = function() {
   for (var i = start; i <= end; i++) {
     editRow(i);
   }
+
+  // Englisch link
+  var eng = $('b:contains(Englisch):first > a')[0];
+  eng.href = '/lwt/plugins/lwt-dict.cc/?' + eng.href.split('?')[1];
+
+  // make thesaurus links relative to here
+  var thesaurusLinks = $('table td>table a').filter(function() {
+    var notJs = this.href.indexOf('javascript') < 0;
+    var notThesaurus = this.href.indexOf('openthesaurus') < 0;
+    return notJs && notThesaurus;
+  });
+  thesaurusLinks.map(function() {
+    var query = this.href.split('?')[1];
+    this.href = `/lwt/plugins/lwt-dict.cc/?${query}`;
+  });
 };
 
 var subjects;
